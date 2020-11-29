@@ -28,6 +28,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var uiBarButtonItem_Share: UIBarButtonItem!
     var uiBarButtonItem_Cancel: UIBarButtonItem!
     
+    let TOP_DISPLAY_TEXT = "TOP"
+    let BOTTOM_DISPLAY_TEXT = "BOTTOM"
+    
     let memeTextAttributes: [NSAttributedString.Key: Any] =
     [
         NSAttributedString.Key.strokeColor: UIColor.black,
@@ -65,23 +68,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func setLaunchStateConfiguration(){
         imagePickerView.image = nil
 
-        topText.text = "TOP"
-        topText.delegate = self
-        topText.defaultTextAttributes = memeTextAttributes
-        topText.textAlignment = NSTextAlignment.center
-        //topText.backgroundColor = UIColor(white: 1, alpha: 0.1)
-        topText.isHidden = true
-        
-        bottomText.text = "BOTTOM"
-        bottomText.delegate = self
-        bottomText.defaultTextAttributes = memeTextAttributes
-        bottomText.textAlignment = NSTextAlignment.center
-        //bottomText.backgroundColor = UIColor(white: 1, alpha: 0.1)
-        bottomText.isHidden = true
+        //Setup TextFields for Launch State
+        setupTextFieldForLaunchState(topText, TOP_DISPLAY_TEXT)
+        setupTextFieldForLaunchState(bottomText, BOTTOM_DISPLAY_TEXT)
         
         //Disable share, cancel button as image is not set/selected yet.
         uiBarButtonItem_Share.isEnabled = false
         uiBarButtonItem_Cancel.isEnabled = false
+    }
+    
+    func setupTextFieldForLaunchState(_ textField: UITextField, _ defaultText: String) {
+        textField.delegate = self
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.text = defaultText
+        textField.isHidden = true
     }
     
     func setMemeStateConfiguration(image: UIImage){
@@ -91,14 +92,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         uiBarButtonItem_Share.isEnabled = true
         uiBarButtonItem_Cancel.isEnabled = true
         
-        topText.isHidden = false
-        bottomText.isHidden = false
-        
-        topText.adjustsFontSizeToFitWidth = true
-        bottomText.adjustsFontSizeToFitWidth = true
-        
-        topText.text = "TOP"
-        bottomText.text = "BOTTOM"
+        //Setup TextFields for Meme State
+        setupTextFieldForMemeState(topText, TOP_DISPLAY_TEXT)
+        setupTextFieldForMemeState(bottomText, BOTTOM_DISPLAY_TEXT)
+    }
+    
+    func setupTextFieldForMemeState(_ textField: UITextField, _ defaultText: String) {
+        textField.isHidden = false
+        textField.adjustsFontSizeToFitWidth = true
+        textField.text = defaultText
     }
     
     @objc func shareMeme(){
@@ -128,18 +130,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func PickImageFromAlbum(_ sender: Any) {
-        let controller = UIImagePickerController()
-        controller.sourceType = .photoLibrary
-        controller.delegate = self
-        present(controller, animated: true, completion: nil)
+        pickFromSource(.photoLibrary)
     }
     
     @IBAction func PickImageFromCamera(_ sender: Any) {
+        pickFromSource(.camera)
+    }
+    
+    func pickFromSource(_ source: UIImagePickerController.SourceType) {
         let controller = UIImagePickerController()
-        controller.sourceType = .camera
-        controller.delegate = self
+        controller.delegate = self;
+        controller.sourceType = source
         present(controller, animated: true, completion: nil)
-        
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -155,7 +157,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if (textField.text == "TOP" || textField.text == "BOTTOM"){
+        if (textField.text == TOP_DISPLAY_TEXT || textField.text == BOTTOM_DISPLAY_TEXT){
             textField.text = ""
         }
     }
