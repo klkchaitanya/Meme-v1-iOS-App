@@ -32,8 +32,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     [
         NSAttributedString.Key.strokeColor: UIColor.black,
         NSAttributedString.Key.foregroundColor: UIColor.white,
-        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 20)!,
-        NSAttributedString.Key.strokeWidth: 2.0
+        NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 30)!,
+        NSAttributedString.Key.strokeWidth: 3.0
         //NSAttributedString.Key.backgroundColor: UIColor.white
     ]
     
@@ -93,6 +93,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         topText.isHidden = false
         bottomText.isHidden = false
+        
+        topText.adjustsFontSizeToFitWidth = true
+        bottomText.adjustsFontSizeToFitWidth = true
         
         topText.text = "TOP"
         bottomText.text = "BOTTOM"
